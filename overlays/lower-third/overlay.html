@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lower Third</title>
+<style>
+@import url('https://fonts.googleapis.com/css?family=PT+Sans');
+
+html {
+	height: 1080px;
+	width: 1920px;
+    overflow: hidden;
+}
+body {
+	height: 1080px;
+	width: 1920px;
+	margin: 0;
+	overflow: hidden;
+	font-family: 'PT Sans';
+	background: transparent;
+}
+.sitebox {
+	margin-top: 13%;
+}
+#lower-third {
+	position: absolute;
+	left: -100%;
+    opacity: 0;
+    transition: all 1s ease-in;
+}
+#lower-third.show {
+	left: 0%;
+    opacity: 1;
+}
+
+#line1 {
+    position: absolute;
+    top: 60px;
+    left: 35px;
+    font-size: 5em;
+    background: #3151de;
+    padding: 0 2rem;
+    color: white;
+    box-shadow: 5px 5px 5px black;
+    min-width: 25rem;
+    white-space: nowrap;
+}
+
+#line2 {
+    position: absolute;
+    top: 160px;
+    left: 200px;
+    font-size: 3em;
+    background: #de8631;
+    padding: 0 1rem;
+    color: white;
+    box-shadow: 5px 5px 5px black;
+    min-width: 10rem;
+    white-space: nowrap;
+}
+</style>
+</head>
+<body>
+	<div class="sitebox">
+		<div id="lower-third">
+            <span id="line1">Main header line</span>
+            <span id="line2">Sub header line</span>
+		</div>
+	</div>
+<script>
+var socketIsOpen = false;
+var intervalID = 0;
+connectWebsocket = function() {
+    // Modify this URL to point to the IP address and port where your server is running on
+	websocket = new WebSocket("ws://127.0.0.1:8000");
+	websocket.onopen = function(event) {
+        socketIsOpen = true;
+        clearInterval(intervalID);
+        intervalID = 0;
+    };
+	websocket.onclose = function(event) {
+        socketIsOpen = false;
+        if (!intervalID) {
+            intervalID = setInterval(connectWebsocket, 5000);
+        }
+    };
+	websocket.onmessage = function(event) {
+        console.log(event.data);
+        var messageObject = JSON.parse(event.data);
+        window.commandRecieved(messageObject);
+    };
+	websocket.onerror = function(event) {
+        socketIsOpen = false;
+        if (!intervalID) {
+            intervalID = setInterval(connectWebsocket, 5000);
+        }
+    };
+};
+
+window.addEventListener("load", connectWebsocket, false);
+
+function commandRecieved(data) {
+    if (data.hasOwnProperty('line1')) {
+        document.getElementById("line1").innerHTML = data['line1'];
+    }
+    if (data.hasOwnProperty('line2')) {
+        document.getElementById("line2").innerHTML = data['line2'];
+    }
+    if (data.hasOwnProperty('show')) {
+        document.getElementById('lower-third').classList.toggle('show', data['show']);
+    }
+    if (data['ping']) {
+        sendCommand({pong: command['ping']});
+    }
+}
+</script>
+</body>
+</html>
