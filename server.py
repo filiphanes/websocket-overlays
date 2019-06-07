@@ -15,10 +15,11 @@ async def distributor(websocket, path):
     try:
         async for message in websocket:
             print(message)
-            if CLIENTS:       # asyncio.wait doesn't accept an empty list
+            if len(CLIENTS) > 1:       # asyncio.wait doesn't accept an empty list
                 await asyncio.wait([client.send(message) for client in CLIENTS if client != websocket])
     finally:
         CLIENTS.remove(websocket)
+        print('%s:%s disconnected' % websocket.remote_address)
 
 def help():
         print('''Websocket sync server
