@@ -1,13 +1,16 @@
-var ip = "127.0.0.1"; //Modify this to point to the ip address where your server is running on
-var port = "8000";
+//Modify this to point to the ip address where your server is running on
+WEBSOCKET_URI = WEBSOCKET_URI || "ws://127.0.0.1:8089/";
 
-///////////////////////////////////////////////////////////////////////////
-
-
-window.addEventListener("load", init, false);
 var socketIsOpen = 0;
 var intervalID = 0;
 var closedByUser = 0;
+
+window.addEventListener("load", function () {
+	document.getElementById("WEBSOCKET_URI").value = document.getElementById("WEBSOCKET_URI").value || WEBSOCKET_URI;
+	document.getElementById("inputtext").value = '{"ping":"test"}'
+	document.getElementById("btt_disconnect").disabled = true;
+	doConnect();
+}, false);
 
 function getInput(id) {
 	return document.getElementById(id).value;
@@ -22,16 +25,9 @@ function sendCommand(obj) {
 }
 
 
-function init() {
-	document.getElementById("ip").value = ip;
-	document.getElementById("port").value = port;
-	document.getElementById("inputtext").value = '{"ping":"test"}'
-	document.getElementById("btt_disconnect").disabled = true;
-	doConnect();
-}
-
 function doConnect() {
-	websocket = new WebSocket("ws://" + ip + ":" + port + "/");
+	WEBSOCKET_URI = document.getElementById("WEBSOCKET_URI").value;
+	websocket = new WebSocket(WEBSOCKET_URI);
 	websocket.onopen = function(evt) {
 		socketIsOpen = 1;
 		writeToScreen("\nInfo: Connection opened");

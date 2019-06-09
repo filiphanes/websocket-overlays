@@ -5,7 +5,7 @@ Simple and powerfull remote controlled html pages useful for overlays in OBS Stu
 Python 3.6+ is needed. You can download it from https://www.python.org/downloads/
 
     pip3 install websockets
-    python3 server.py localhost 8000
+    python3 server.py 127.0.0.1 8089
 
 # Setup in playout software
 ## OBS Studio
@@ -17,11 +17,21 @@ Python 3.6+ is needed. You can download it from https://www.python.org/downloads
 6. Set the Resolution to 1920x1080 (Width: 1920; Height: 1080) or the overlay resolution
 7. Set FPS to you stream FPS
 
+# Setup
+Only setting you might want to change is websocket URI in overlay.html and controller.html.
+Set it to the same IP address and port as your server is running on.
+
+    WEBSOCKET_URI = "ws://127.0.0.1:8089/"
+
+
 # Thanks
-This project was inspired by https://github.com/lebaston100/htmlOverlayFramework
+This project was inspired by
+- https://github.com/lebaston100/htmlOverlayFramework
+- https://github.com/hberntsen/websocket-png-overlayer
+- https://github.com/Scrxtchy/ts3-overlay-ws
+- https://github.com/slugalisk/win-loss-overlay
+
 But I have made:
  - standard python naming (not CamelCase)
- - without CDN library which requires internet connection
- - better websockets library from pypi (not from github)
  - simpler directory structure
  - one javascript include for html overlay and controller
