@@ -3,6 +3,9 @@
 <head>
 <meta charset="utf-8">
 <title>Lower Third</title>
+<script>
+WEBSOCKET_URI = "ws://127.0.0.1:8089/"
+</script>
 <style>
 @import url('https://fonts.googleapis.com/css?family=PT+Sans');
 
@@ -53,7 +56,7 @@ var socketIsOpen = false;
 var intervalID = 0;
 connectWebsocket = function() {
     // Modify this URL to point to the IP address and port where your server is running on
-	websocket = new WebSocket("ws://127.0.0.1:8000/");
+	websocket = new WebSocket(WEBSOCKET_URI);
 	websocket.onopen = function(event) {
         socketIsOpen = true;
         clearInterval(intervalID);

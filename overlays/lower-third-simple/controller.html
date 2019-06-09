@@ -3,7 +3,10 @@
 <head>
 <meta charset="utf-8" />
 <title>Lower Third Controller</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+<script>
+WEBSOCKET_URI = "ws://127.0.0.1:8089/"
+</script>
+<link rel="stylesheet" href="../css/materialize.min.css">
 <style>
 .space {
 	margin-bottom: 8px;
@@ -15,50 +18,31 @@ textarea.materialize-textarea {
 	margin: 3em;
 }
 </style>
-<script src="../controller.js"></script>
+<script src="../js/controller.js"></script>
 </head>
 <body>
 	<div class="cc">
 		<div class="row">
-			<div class="col s3">Custom GUI Demo</div>
-			<div class="col s3"></div>
-			<div class="col s5">Console Demo</div>
-		</div>
-		<div class="row">
-			<div class="col s3">
+			<div class="col s6">
 				<input type="text" placeholder="Line 1" id="line1">
-			</div>
-			<div class="col s2">
 				<div class="space">
-					<button class="btn" onClick='sendCommand({"line1": getInput("line1")});'>Update Line</button>
-				</div>
-				<div class="space">
-					<button class="btn" onClick='sendCommand({"show": 1});'>Show</button>
+					<button class="btn" onClick='sendCommand({"line1": getInput("line1"), "show": 1});'>Show</button>
 					<button class="btn" onClick='sendCommand({"show": 0});'>Hide</button>
-				</div>
-				<div class="space">
-					<button class="btn" onClick='sendCommand({"line1": getInput("line1"), "show": 1});'>Update lines &amp; Show</button>
 				</div>
 			</div>
 			<div class="col s1"></div>
 			<div class="col s5">
 				<div class="row">
-					<div class="col s4"><br><br>Console:<br><br><br>Command Input:<br><br><br>IP:<br><br><br>Port:</div>
-					<div class="col s8">
-						<div class="row">
-							<textarea id="outputtext" rows="20" cols="50" class="materialize-textarea"></textarea>
-							<input id="inputtext" placeholder="Command">
-                            <input id="ip" placeholder="127.0.0.1">
-                            <input id="port" type="number" placeholder="8000">
-							<button class="btn" onClick='sendCommand(JSON.parse(getInput("inputtext")));'>Send command</button>
-							<button class="btn" onClick='doDisconnect();' id="btt_disconnect">Disconnect</button>
-							<button class="btn" onClick='doConnect();' id="btt_connect">Connect</button>
-						</div>
-					</div>
+					Console: <textarea id="outputtext" rows="20" cols="50" class="materialize-textarea"></textarea>
+					Command Input: <input id="inputtext" placeholder="Command">
+					<button class="btn" onClick='sendCommand(JSON.parse(getInput("inputtext")));'>Send command</button><br>
+					Websocket URI: <input id="WEBSOCKET_URI" value="ws://127.0.0.1:8089/" placeholder="ws://127.0.0.1:8089/"><br>
+					<button class="btn" onClick='doConnect();' id="btt_connect">Connect</button>
+					<button class="btn" onClick='doDisconnect();' id="btt_disconnect">Disconnect</button>
 				</div>
 			</div>
 		</div>
 	</div>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+	<script src="../js/materialize.min.js"></script>
 </body>
 </html>
