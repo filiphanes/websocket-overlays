@@ -50,6 +50,7 @@ function doConnect() {
 	websocket.onmessage = function(evt) {
 		var jsonOBJ = JSON.parse(evt.data);
 		writeToScreen('\n' + evt.data);
+		onMessage(jsonOBJ);
 	};
 	websocket.onerror = function(evt) {
 		writeToScreen('\nConnection failed, is the Server running?');

@@ -18,6 +18,14 @@ textarea.materialize-textarea {
 	margin: 3em;
 }
 </style>
+<script>
+function onMessage(data) {
+	console.log(data);
+    if (data.hasOwnProperty('line1')) {
+        document.getElementById("line1").value = data['line1'];
+    }
+}
+</script>
 <script src="../js/controller.js"></script>
 </head>
 <body>
@@ -26,8 +34,8 @@ textarea.materialize-textarea {
 			<div class="col s6">
 				<input type="text" placeholder="Line 1" id="line1">
 				<div class="space">
-					<button class="btn" onClick='sendCommand({"line1": getInput("line1"), "show": 1});'>Show</button>
-					<button class="btn" onClick='sendCommand({"show": 0});'>Hide</button>
+					<button class="btn" onclick='sendCommand({"line1": getInput("line1"), "show": 1});'>Show</button>
+					<button class="btn" onclick='sendCommand({"show": 0});'>Hide</button>
 				</div>
 			</div>
 			<div class="col s1"></div>
@@ -35,10 +43,10 @@ textarea.materialize-textarea {
 				<div class="row">
 					Console: <textarea id="outputtext" rows="20" cols="50" class="materialize-textarea"></textarea>
 					Command Input: <input id="inputtext" placeholder="Command">
-					<button class="btn" onClick='sendCommand(JSON.parse(getInput("inputtext")));'>Send command</button><br>
+					<button class="btn" onclick='sendCommand(JSON.parse(getInput("inputtext")));'>Send command</button><br>
 					Websocket URI: <input id="WEBSOCKET_URI" value="ws://127.0.0.1:8089/" placeholder="ws://127.0.0.1:8089/"><br>
-					<button class="btn" onClick='doConnect();' id="btt_connect">Connect</button>
-					<button class="btn" onClick='doDisconnect();' id="btt_disconnect">Disconnect</button>
+					<button class="btn" onclick='doConnect();' id="btt_connect">Connect</button>
+					<button class="btn" onclick='doDisconnect();' id="btt_disconnect">Disconnect</button>
 				</div>
 			</div>
 		</div>

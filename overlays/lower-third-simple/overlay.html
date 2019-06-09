@@ -35,8 +35,8 @@ body {
 
 #line1 {
     position: absolute;
-    top: 700px;
-    left: 35px;
+    top: 550px;
+    left: 40px;
     font-size: 5em;
     padding: 0 2rem;
     color: white;
@@ -71,7 +71,7 @@ connectWebsocket = function() {
 	websocket.onmessage = function(event) {
         console.log(event.data);
         var messageObject = JSON.parse(event.data);
-        window.commandRecieved(messageObject);
+        window.onMessage(messageObject);
     };
 	websocket.onerror = function(event) {
         socketIsOpen = false;
@@ -83,7 +83,7 @@ connectWebsocket = function() {
 
 window.addEventListener("load", connectWebsocket, false);
 
-function commandRecieved(data) {
+function onMessage(data) {
     if (data.hasOwnProperty('line1')) {
         document.getElementById("line1").innerHTML = data['line1'];
     }

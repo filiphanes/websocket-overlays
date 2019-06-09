@@ -6,19 +6,28 @@ import asyncio
 import json
 import sys
 import websockets
+from collections import defaultdict
 
-CLIENTS = set()
+CLIENTS = defaultdict(set)
+STATE = defaultdict(dict)
 
 async def distributor(websocket, path):
-    CLIENTS.add(websocket)
+    CLIENTS[path].add(websocket)
+    await websocket.send(json.dumps(STATE[path]))
     print('%s:%s connected' % websocket.remote_address)
     try:
         async for message in websocket:
-            print(message)
+            try:
+                STATE[path].update(json.loads(message))
+            except Exception:
+                print('Message is not valid JSON', message)
             if len(CLIENTS) > 1:       # asyncio.wait doesn't accept an empty list
                 await asyncio.wait([client.send(message) for client in CLIENTS if client != websocket])
+            print('%s:%s' % websocket.remote_address, message)
     finally:
-        CLIENTS.remove(websocket)
+        CLIENTS[path].remove(websocket)
+        if not CLIENTS[path]:
+            del CLIENTS[path]
         print('%s:%s disconnected' % websocket.remote_address)
 
 def help():
