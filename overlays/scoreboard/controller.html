@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Scoreboard Controller</title>
+<script>
+WEBSOCKET_URI = "ws://127.0.0.1:8089/scoreboard";
+</script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
+<link rel="stylesheet" href="css/controller.css">
+<body>
+	<div class="cc">
+		<div class="row">
+			<div class="col s3">
+				<input type="text" placeholder="Team 1" id="team1" value="Team 1"> <input type="text" placeholder="Team 2" id="team2" value="Team 2">
+				<div class="scoreText">
+					Score <span id="score1">0</span>:<span id="score2">0</span>
+				</div>
+			</div>
+			<div class="col s2">
+				<div class="space">
+					<button class="btn" onclick='updateTeamName1();'>Update Team 1</button>
+				</div>
+				<div class="space">
+					<button class="btn" onclick='updateTeamName2();'>Update Team 2</button>
+				</div>
+				<div class="space2">
+					<button class="btn" onclick='team1up()'>Team 1 score +1</button>
+					<button class="btn" onclick='team1down()'>-1</button>
+				</div>
+				<div class="space2">
+					<button class="btn" onclick='team2up()'>Team 2 Score +1</button>
+					<button class="btn" onclick='team2down()'>-1</button>
+				</div>
+				<div class="space2">
+					<button class="btn" onclick='show();'>Show</button>
+					<button class="btn" onclick='hide();'>Hide</button>
+				</div>
+			</div>
+			<div class="col s1"></div>
+			<div class="col s5">
+				<div class="row">
+					Console: <textarea id="outputtext" rows="20" cols="50" class="materialize-textarea"></textarea>
+					Command Input: <input id="inputtext" placeholder="Command">
+					<button class="btn" onclick='sendCommand(JSON.parse(getInput("inputtext")));'>Send command</button><br>
+					Websocket URI: <input id="WEBSOCKET_URI" value="ws://127.0.0.1:8089/" placeholder="ws://127.0.0.1:8089/"><br>
+					<button class="btn" onclick='doConnect();' id="btt_connect">Connect</button>
+					<button class="btn" onclick='doDisconnect();' id="btt_disconnect">Disconnect</button>
+				</div>
+			</div>
+		</div>
+		<div>The scoreboard animation in this example was made by <a href="http://glowdragon.de" target="_blank">glowdragon.de</a></div>
+	</div>
+<script>
+document.getElementById("WEBSOCKET_URI").innerHTML = WEBSOCKET_URI;
+var score1 = 0;
+var score2 = 0;
+
+function team1up () {
+	score1 += 1;
+	document.getElementById("score1").innerHTML = score1;
+	sendCommand({"score1": score1});
+}
+function team1down () {
+	score1 -= 1;
+	document.getElementById("score1").innerHTML = score1;
+	sendCommand({"score1": score1});
+}
+function team2up() {
+	score2 += 1;
+	document.getElementById("score2").innerHTML = score2;
+	sendCommand({"score2": score2});
+}
+function team2down() {
+	score2 -= 1;
+	document.getElementById("score2").innerHTML = score2;
+	sendCommand({"score2": score2});
+}
+function show() {
+	sendCommand({
+		"team1": getInput("team1"),
+		"team2": getInput("team2"),
+		"score1": score1,
+		"score2": score2,
+		"show": true
+	});
+}
+function hide() {
+	sendCommand({show: false});
+}
+function updateTeamName1() {
+	sendCommand({"team1": getInput("team1")});
+}
+function updateTeamName2() {
+	sendCommand({"team2": getInput("team2")});
+}
+function onMessage(data) {
+	console.log(data);
+    if (data.hasOwnProperty('team1')) {
+        document.getElementById("team1").value = data['team1'];
+    }
+    if (data.hasOwnProperty('team2')) {
+        document.getElementById("team2").value = data['team2'];
+    }
+    if (data.hasOwnProperty('score1')) {
+		score1 = data['score1'];
+        document.getElementById("score1").innerHTML = data['score1'];
+    }
+    if (data.hasOwnProperty('score2')) {
+		score1 = data['score1'];
+        document.getElementById("score2").innerHTML = data['score2'];
+    }
+}
+</script>
+<script src="../js/controller.js"></script></head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
+</body>
+</html>
