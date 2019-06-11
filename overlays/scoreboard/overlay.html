@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Scoreboard</title>
+<script>
+WEBSOCKET_URI = "ws://127.0.0.1:8089/scoreboard"
+</script>
+<link rel="stylesheet" href="css/overlay.css">
+<script>
+var socketIsOpen = false;
+var intervalID = 0;
+
+connectWebsocket = function() {
+    // Modify this URL to point to the IP address and port where your server is running on
+	websocket = new WebSocket(WEBSOCKET_URI);
+	websocket.onopen = function(event) {
+        socketIsOpen = true;
+        clearInterval(intervalID);
+        intervalID = 0;
+    };
+	websocket.onclose = function(event) {
+        socketIsOpen = false;
+        if (!intervalID) {
+            intervalID = setInterval(connectWebsocket, 5000);
+        }
+    };
+	websocket.onmessage = function(event) {
+        console.log(event.data);
+        var messageObject = JSON.parse(event.data);
+        window.onMessage(messageObject);
+    };
+	websocket.onerror = function(event) {
+        socketIsOpen = false;
+        if (!intervalID) {
+            intervalID = setInterval(connectWebsocket, 5000);
+        }
+    };
+};
+window.addEventListener("load", connectWebsocket, false);
+
+function onMessage(data) {
+	console.log(data);
+    if (data.hasOwnProperty('team1')) {
+        document.getElementById("team1").innerHTML = data['team1'];
+    }
+    if (data.hasOwnProperty('team2')) {
+        document.getElementById("team2").innerHTML = data['team2'];
+    }
+    if (data.hasOwnProperty('score1')) {
+        document.getElementById("score1").innerHTML = data['score1'];
+    }
+    if (data.hasOwnProperty('score2')) {
+        document.getElementById("score2").innerHTML = data['score2'];
+    }
+    if (data.hasOwnProperty('show')) {
+        if (data['show']) {
+        	document.body.classList.add('show');
+		} else {
+        	document.body.classList.remove('show');
+		}
+    }
+}
+</script>
+</head>
+<body>
+	<div id="score">
+		<span id="score1">0</span> - <span id="score2">0</span>
+	</div>
+	<div id="scoreboard">
+		<div id="team1div" class="team">
+			<span id="team1" class="team-name">Team 1</span>
+		</div>
+		<div id="scorePlaceholder">.</div>
+		<div id="team2div" class="team">
+			<span id="team2" class="team-name">Team 2</span>
+		</div>
+		<div class="clear"></div>
+	</div>
+</body>

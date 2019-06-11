@@ -14,15 +14,15 @@ STATE = defaultdict(dict)
 async def distributor(websocket, path):
     CLIENTS[path].add(websocket)
     await websocket.send(json.dumps(STATE[path]))
-    print('%s:%s connected' % websocket.remote_address)
+    print('%s:%s connected' % websocket.remote_address, path)
     try:
         async for message in websocket:
             try:
                 STATE[path].update(json.loads(message))
             except Exception:
                 print('Message is not valid JSON', message)
-            if len(CLIENTS) > 1:       # asyncio.wait doesn't accept an empty list
-                await asyncio.wait([client.send(message) for client in CLIENTS if client != websocket])
+            if len(CLIENTS[path]) > 1:       # asyncio.wait doesn't accept an empty list
+                await asyncio.wait([client.send(message) for client in CLIENTS[path] if client != websocket])
             print('%s:%s' % websocket.remote_address, message)
     finally:
         CLIENTS[path].remove(websocket)

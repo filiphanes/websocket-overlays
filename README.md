@@ -29,3 +29,10 @@ This project was inspired by
 - https://github.com/hberntsen/websocket-png-overlayer
 - https://github.com/Scrxtchy/ts3-overlay-ws
 - https://github.com/slugalisk/win-loss-overlay
+
+# TODO
+- more overlays
+- bootstrap js and css
+- remember controller config in browser session storage
+- public websocket server with public overlays
+- server implementation in nodejs
