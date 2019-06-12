@@ -6,93 +6,113 @@
 <script>
 WEBSOCKET_URI = "ws://127.0.0.1:8089/scoreboard";
 </script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/css/materialize.min.css">
-<link rel="stylesheet" href="css/controller.css">
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<style>
+html, body {
+	background: #222222;
+}
+input[type="number"] {
+	width: 3rem;
+}
+</style>
+</head>
 <body>
-	<div class="cc">
-		<div class="row">
-			<div class="col s3">
-				<input type="text" placeholder="Team 1" id="team1" value="Team 1"> <input type="text" placeholder="Team 2" id="team2" value="Team 2">
-				<div class="scoreText">
-					Score <span id="score1">0</span>:<span id="score2">0</span>
-				</div>
-			</div>
-			<div class="col s2">
-				<div class="space">
-					<button class="btn" onclick='updateTeamName1();'>Update Team 1</button>
-				</div>
-				<div class="space">
-					<button class="btn" onclick='updateTeamName2();'>Update Team 2</button>
-				</div>
-				<div class="space2">
-					<button class="btn" onclick='team1up()'>Team 1 score +1</button>
-					<button class="btn" onclick='team1down()'>-1</button>
-				</div>
-				<div class="space2">
-					<button class="btn" onclick='team2up()'>Team 2 Score +1</button>
-					<button class="btn" onclick='team2down()'>-1</button>
-				</div>
-				<div class="space2">
-					<button class="btn" onclick='show();'>Show</button>
-					<button class="btn" onclick='hide();'>Hide</button>
-				</div>
-			</div>
-			<div class="col s1"></div>
-			<div class="col s5">
-				<div class="row">
-					Console: <textarea id="outputtext" rows="20" cols="50" class="materialize-textarea"></textarea>
-					Command Input: <input id="inputtext" placeholder="Command">
-					<button class="btn" onclick='sendCommand(JSON.parse(getInput("inputtext")));'>Send command</button><br>
-					Websocket URI: <input id="WEBSOCKET_URI" value="ws://127.0.0.1:8089/" placeholder="ws://127.0.0.1:8089/"><br>
-					<button class="btn" onclick='doConnect();' id="btt_connect">Connect</button>
-					<button class="btn" onclick='doDisconnect();' id="btt_disconnect">Disconnect</button>
+<div class="container-fluid my-3">
+	<div class="row">
+		<div class="col-md">
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">Scoreboard control</h5>
+					<div class="form-row">
+						<div class="form-group col-md-6">
+							<label for="team1">Team 1:</label>
+							<input class="form-control" type="text" placeholder="Team 1 Name" id="team1" value="Team 1" onchange="updateTeamNames()">
+						</div>
+						<div class="form-group col-md-6">
+							<label for="team2">Team 2:</label>
+							<input class="form-control" type="text" placeholder="Team 2 Name" id="team2" value="Team 2" onchange="updateTeamNames()">
+						</div>
+					</div>
+					<div class="form-group">
+						<label>Score:</label>
+						<div class="input-group mb-3">
+							<input class="form-control" type="number" id="score1" value="0" onchange="updateScores()">
+							<span class="form-control input-group-text col-1">-</span>
+							<input class="form-control" type="number" id="score2" value="0" onchange="updateScores()">
+						</div>
+						<small class="form-text text-muted">Team names and Scores are updated automatically on change and show.</small>
+					</div>
+					<div>
+						<button class="btn btn-lg btn-success" onclick='show()'>Show</button>
+						<button class="btn btn-lg btn-primary" onclick='hide()'>Hide</button>
+					</div>
 				</div>
 			</div>
 		</div>
-		<div>The scoreboard animation in this example was made by <a href="http://glowdragon.de" target="_blank">glowdragon.de</a></div>
+		<div class="col-md">
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">Connection settings</h5>
+					<div class="form-row">
+						<div class="form-group col">
+							<label for="WEBSOCKET_URI">Websocket URI:</label>
+							<div class="input-group">
+								<input id="WEBSOCKET_URI" class="form-control" value="ws://127.0.0.1:8089/" placeholder="ws://127.0.0.1:8089/">
+								<button class="form-control btn btn-success col-3" onclick='doConnect();' id="btt_connect">Connect</button>
+								<button class="form-control btn btn-danger col-3" onclick='doDisconnect();' id="btt_disconnect">Disconnect</button>
+							</div>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group col">
+							<label for="inputtext">Custom command:</label>
+							<div class="input-group">
+								<input id="inputtext" class="form-control" type="text" placeholder="Command">
+								<div class="input-group-append">
+									<button class="form-control btn btn-primary" onclick='sendCommand(JSON.parse(document.getElementById("inputtext").value));'>Send command</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group col">
+							<label for="outputtext">Console:</label>
+							<textarea id="outputtext" class="form-control" style="height: 10rem; font-size: 80%; font-family: monospace;" readonly></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
+	<small class="text-muted">The scoreboard animation in this example was made by <a href="http://glowdragon.de" target="_blank">glowdragon.de</a></small>
+</div>
+<script src="../js/controller.js"></script>
 <script>
-document.getElementById("WEBSOCKET_URI").innerHTML = WEBSOCKET_URI;
-var score1 = 0;
-var score2 = 0;
+document.getElementById("WEBSOCKET_URI").value = WEBSOCKET_URI;
 
-function team1up () {
-	score1 += 1;
-	document.getElementById("score1").innerHTML = score1;
-	sendCommand({"score1": score1});
-}
-function team1down () {
-	score1 -= 1;
-	document.getElementById("score1").innerHTML = score1;
-	sendCommand({"score1": score1});
-}
-function team2up() {
-	score2 += 1;
-	document.getElementById("score2").innerHTML = score2;
-	sendCommand({"score2": score2});
-}
-function team2down() {
-	score2 -= 1;
-	document.getElementById("score2").innerHTML = score2;
-	sendCommand({"score2": score2});
-}
 function show() {
 	sendCommand({
-		"team1": getInput("team1"),
-		"team2": getInput("team2"),
-		"score1": score1,
-		"score2": score2,
+		"team1": document.getElementById("team1").value,
+		"team2": document.getElementById("team2").value,
+		"score1": document.getElementById("score1").value,
+		"score2": document.getElementById("score2").value,
 		"show": true
 	});
 }
 function hide() {
 	sendCommand({show: false});
 }
-function updateTeamName1() {
-	sendCommand({"team1": getInput("team1")});
+function updateTeamNames() {
+	sendCommand({
+		"team1": document.getElementById("team1").value,
+		"team2": document.getElementById("team2").value,
+	});
 }
-function updateTeamName2() {
-	sendCommand({"team2": getInput("team2")});
+function updateScores() {
+	sendCommand({
+		"score1": document.getElementById("score1").value,
+		"score2": document.getElementById("score2").value,
+	});
 }
 function onMessage(data) {
 	console.log(data);
@@ -112,7 +132,5 @@ function onMessage(data) {
     }
 }
 </script>
-<script src="../js/controller.js"></script></head>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-beta/js/materialize.min.js"></script>
 </body>
 </html>
