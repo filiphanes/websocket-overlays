@@ -37,8 +37,14 @@ connectWebsocket = function() {
         }
     };
 };
-window.addEventListener("load", connectWebsocket, false);
-
+window.addEventListener("load", function(){
+    connectWebsocket();
+    // each animation is finished by toggling .show class
+    document.getElementById('scoreboard').addEventListener("animationend", function() {
+        document.body.classList.toggle('show');
+        document.body.classList.remove('animated');
+    });
+}, false);
 function onMessage(data) {
 	console.log(data);
     if (data.hasOwnProperty('team1')) {
@@ -54,10 +60,9 @@ function onMessage(data) {
         document.getElementById("score2").innerHTML = data['score2'];
     }
     if (data.hasOwnProperty('show')) {
-        if (data['show']) {
-        	document.body.classList.add('show');
-		} else {
-        	document.body.classList.remove('show');
+        if (data['show'] != document.body.classList.contains('show')) {
+            // animation is finished by toggling .show class in event listener animationend
+        	document.body.classList.add('animated');
 		}
     }
 }

@@ -14,48 +14,36 @@ html, body {
 }
 
 #scoreboard {
-	-webkit-animation-name: animScoreboardFWD;
     -webkit-animation-timing-function: ease-in-out;
     -webkit-animation-duration: 2s;
-    animation-direction: reverse;
-    animation-play-state: running;
     width: 128px;
     height: 50px;
-    margin: auto;
-    margin-top: 1080px;
+    margin: 1080px auto 0;
     border-radius: 25px 25px 25px 25px;
     box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.75);
 }
 
-@-webkit-keyframes animScoreboardFWD
-{
-    0% {
-        width: 128px;
-        margin-top: 1080px;
-    }
-    33% {
-        margin-top: 800px;
-        width: 128px;
-    }
-    66% { width: 640px; }
-    100% { width: 640px; }
+@-webkit-keyframes animation-scoreboard{
+    0% { width: 128px; margin-top: 1080px; }
+    33% { width: 128px; margin-top: 800px; }
+    66% { width: 640px; margin-top: 800px; }
+    100% { width: 640px; margin-top: 800px; }
 }
 
 .team {
-    -webkit-animation-name: animTeamFWD;
     -webkit-animation-timing-function: ease-in-out;
+    animation-timing-function: ease-in-out;
     -webkit-animation-duration: 2s;
-    animation-direction: reverse;
-    animation-play-state: running;
+    animation-duration: 2s;
     float: left;
     display: block;
     width: 0px;
     height: 44px;
     padding-top: 6px;
-    border: 0px solid #000000;
+    border: 0 solid black;
     text-align: center;
     font-size: 22pt;
-    color: #fff;
+    color: white;
 }
 
 #team1div {
@@ -82,7 +70,7 @@ html, body {
     border-radius: 0px 25px 25px 0px;
 }
 
-@-webkit-keyframes animTeamFWD {
+@-webkit-keyframes animation-team {
     0% { width: 0px; }
     33% { width: 0px; }
     66% { width: 256px; }
@@ -90,16 +78,13 @@ html, body {
 }
 
 .team-name {
-    -webkit-animation-name: animTeamNameFWD;
     -webkit-animation-timing-function: ease-in-out;
     -webkit-animation-duration: 2s;
-    animation-direction: reverse;
-    animation-play-state: running;
     text-shadow: 0px 0px 2px rgba(0, 0, 0, 1);
     width: 0px;
 }
 
-@-webkit-keyframes animTeamNameFWD {
+@-webkit-keyframes animation-team-name {
     0% { opacity: 0; }
     66% { opacity: 0; }
     100% { opacity: 1; }
@@ -111,11 +96,10 @@ html, body {
 }
 
 #score {
-    -webkit-animation-name: animScoreFWD;
     -webkit-animation-timing-function: ease-in-out;
+    animation-timing-function: ease-in-out;
     -webkit-animation-duration: 2s;
-    animation-direction: reverse;
-    animation-play-state: running;
+    animation-duration: 2s;
     position: absolute;
     top: 1080px;
     left: 893px;
@@ -125,44 +109,58 @@ html, body {
     text-align: center;
     background-color: white;
     font-size: 22pt;
-    color: #000;
+    color: black;
     border-radius: 3px;
-    border: 0 solid #000;
+    border: 0 solid black;
     box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.75);
 }
 
-@-webkit-keyframes animScoreFWD {
+@-webkit-keyframes animation-score {
     0% { top: 1080px; }
     33% { top: 797px; }
+    100% { top: 797px; }
 }
 
+.show #score {
+    top: 797px;
+}
 .show #scoreboard {
-    visibility: visible;
-    animation-direction: normal;
-    -webkit-animation-name: "animScoreboardFWD";
-    animation-name: "animScoreboardFWD";
     margin-top: 800px;
     width: 640px;
 }
-
 .show .team {
-    visibility: visible;
-    animation-direction: normal;
-    -webkit-animation-name: "animTeamFWD";
-    animation-name: "animTeamFWD";
     width: 256px;
 }
-.show #team-name {
-    visibility: visible;
-    animation-direction: normal;
-    -webkit-animation-name: "animTeamNameFWD";
-    animation-name: "animTeamNameFWD";
+.show .team-name {
     width: 256px;
 }
-.show #score {
+
+.animated #score {
     visibility: visible;
+    -webkit-animation-name: "animation-score";
+    animation-name: "animation-score";
     animation-direction: normal;
-    -webkit-animation-name: "animScoreFWD";
-    animation-name: "animScoreFWD";
-    top: 797px;
+}
+.animated #scoreboard {
+    visibility: visible;
+    -webkit-animation-name: "animation-scoreboard";
+    animation-name: "animation-scoreboard";
+    animation-direction: normal;
+}
+.animated .team {
+    -webkit-animation-name: "animation-team";
+    animation-name: "animation-team";
+    animation-direction: normal;
+}
+.animated .team-name {
+    -webkit-animation-name: "animation-team-name";
+    animation-name: "animation-team-name";
+    animation-direction: normal;
+}
+
+.show.animated #score,
+.show.animated #scoreboard,
+.show.animated .team,
+.show.animated .team-name {
+    animation-direction: reverse;
 }
