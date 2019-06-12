@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <title>Lower Third Controller</title>
 <script>
-WEBSOCKET_URI = "ws://127.0.0.1:8089/"
+WEBSOCKET_URI = "ws://127.0.0.1:8089/lower-third-simple"
 </script>
 <link rel="stylesheet" href="../css/materialize.min.css">
 <style>
@@ -51,6 +51,7 @@ function onMessage(data) {
 			</div>
 		</div>
 	</div>
+	<script>document.getElementById("WEBSOCKET_URI").innerHTML = WEBSOCKET_URI;</script>
 	<script src="../js/materialize.min.js"></script>
 </body>
 </html>
