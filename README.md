@@ -1,8 +1,13 @@
 # Python Websocket Overlay
 Simple and powerfull remote controlled html pages useful for overlays in OBS Studio, Casper CD, XSplit and others.
 
+## Features
+- server holds overlay state, not only relay commands
+- on refresh or reconnect, state is updated from server for overlay and controller so you don't loose texts etc.
+- multiple overlay-controller groups on 1 server instance (via different websocket paths)
+- automatic reconnection every 5s
+
 # Install & Run
-## Python server
 Python 3.6+ is needed. You can download it from https://www.python.org/downloads/
 
     pip3 install websockets
@@ -22,6 +27,12 @@ Set it to the same IP address and port as your server is running on.
 5. Click the "Browse" button on the right and select the client.html you want to use
 6. Set the Resolution to 1920x1080 (Width: 1920; Height: 1080) or the overlay resolution
 7. Set FPS to you stream FPS (examples: 25, 30, 50, 60)
+
+## Caspar CG
+https://github.com/CasparCG/help/wiki/Media:-HTML-Templates
+
+## XSplit
+https://www.xsplit.com/broadcaster/manual/sources/webpage
 
 # Thanks
 This project was inspired by
