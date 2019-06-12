@@ -3,72 +3,94 @@
 <head>
 <meta charset="utf-8" />
 <title>Lower Third Controller</title>
-<link rel="stylesheet" href="../css/materialize.min.css">
-<style>
-.space {
-	margin-bottom: 8px;
-}
-textarea.materialize-textarea {
-    overflow-y: scroll;
-}
-.cc {
-	margin: 3em;
-}
-</style>
-<script src="../controller.js"></script>
 <script>
-	function Macro1() {
-		sendCommand({'line1': getInput("line1")});
-		sendCommand({'line2': getInput("line2")});
-		sendCommand({"show": 1});
-	}
+WEBSOCKET_URI = "ws://127.0.0.1:8089/lower-third"
 </script>
+<link rel="stylesheet" href="../css/bootstrap.min.css">
+<style>
+</style>
 </head>
 <body>
-	<div class="cc">
-		<div class="row">
-			<div class="col s3">Custom GUI Demo</div>
-			<div class="col s3"></div>
-			<div class="col s5">Console Demo</div>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md">
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">Lower Third control</h5>
+					<div class="form-group">
+						<input class="form-control" type="text" id="line1" value="Text Line 1" onchange="updateLines()">
+						<input class="form-control" type="text" id="line2" value="Text Line 2" onchange="updateLines()">
+					</div>
+					<div>
+						<button class="btn btn-lg btn-success" onclick='show()'>Show</button>
+						<button class="btn btn-lg btn-primary" onclick='hide()'>Hide</button>
+					</div>
+				</div>
+			</div>
 		</div>
-		<div class="row">
-			<div class="col s3">
-				<input type="text" placeholder="Line 1" id="line1"> <input type="text" placeholder="Line 2" id="line2">
-			</div>
-			<div class="col s2">
-				<div class="space">
-					<button class="btn" onClick='sendCommand({"line1": getInput("line1")});'>Update Line 1</button>
-				</div>
-				<div class="space">
-					<button class="btn" onClick='sendCommand({"line2": getInput("line2")});'>Update Line 2</button>
-				</div>
-				<div class="space">
-					<button class="btn" onClick='sendCommand({"show": 1});'>Show</button>
-					<button class="btn" onClick='sendCommand({"show": 0});'>Hide</button>
-				</div>
-				<div class="space">
-					<button class="btn" onClick='Macro1();'>Update lines &amp; Show</button>
-				</div>
-			</div>
-			<div class="col s1"></div>
-			<div class="col s5">
-				<div class="row">
-					<div class="col s4"><br><br>Console:<br><br><br>Command Input:<br><br><br>IP:<br><br><br>Port:</div>
-					<div class="col s8">
-						<div class="row">
-							<textarea id="outputtext" rows="20" cols="50" class="materialize-textarea"></textarea>
-							<input id="inputtext" placeholder="Command">
-                            <input id="ip" placeholder="127.0.0.1">
-                            <input id="port" type="number" placeholder="8000">
-							<button class="btn" onClick='sendCommand(JSON.parse(getInput("inputtext")));'>Send command</button>
-							<button class="btn" onClick='doDisconnect();' id="btt_disconnect">Disconnect</button>
-							<button class="btn" onClick='doConnect();' id="btt_connect">Connect</button>
+		<div class="col-md">
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">Connection settings</h5>
+					<div class="form-row">
+						<div class="form-group col">
+							<label for="WEBSOCKET_URI">Websocket URI:</label>
+							<div class="input-group">
+								<input id="WEBSOCKET_URI" class="form-control" value="ws://127.0.0.1:8089/" placeholder="ws://127.0.0.1:8089/">
+								<button class="form-control btn btn-success col-3" onclick='doConnect();' id="btt_connect">Connect</button>
+								<button class="form-control btn btn-danger col-3" onclick='doDisconnect();' id="btt_disconnect">Disconnect</button>
+							</div>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group col">
+							<label for="inputtext">Custom command:</label>
+							<div class="input-group">
+								<input id="inputtext" class="form-control" type="text" placeholder="Command">
+								<div class="input-group-append">
+									<button class="form-control btn btn-primary" onclick='sendCommand(JSON.parse(document.getElementById("inputtext").value));'>Send command</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group col">
+							<label for="outputtext">Console:</label>
+							<textarea id="outputtext" class="form-control" style="height: 10rem; font-size: 80%; font-family: monospace;" readonly></textarea>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<script src="../js/materialize.min.js"></script>
+</div>
+<script src="../js/controller.js"></script>
+<script>
+document.getElementById("WEBSOCKET_URI").value = WEBSOCKET_URI;
+
+function onMessage(data) {
+	console.log(data);
+    if (data.hasOwnProperty('line1')) {
+        document.getElementById("line1").value = data['line1'];
+    }
+}
+
+function updateLines() {
+	sendCommand({
+		"line1": document.getElementById("line1").value,
+		"line2": document.getElementById("line2").value,
+	})
+}
+function show() {
+	sendCommand({
+		"line1": document.getElementById("line1").value,
+		"line2": document.getElementById("line2").value,
+		"show": true,
+	})
+}
+function hide() {
+	sendCommand({"show": false})
+}
+</script>
 </body>
 </html>

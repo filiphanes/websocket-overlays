@@ -22,14 +22,12 @@ body {
 	font-family: 'PT Sans';
 	background: transparent;
 }
-.sitebox {
-}
 #lower-third {
 	position: absolute;
     opacity: 0;
     transition: all 1s ease-in;
 }
-#lower-third.show {
+.show #lower-third {
     opacity: 1;
 }
 
@@ -71,7 +69,7 @@ connectWebsocket = function() {
 	websocket.onmessage = function(event) {
         console.log(event.data);
         var messageObject = JSON.parse(event.data);
-        window.onMessage(messageObject);
+        onMessage(messageObject);
     };
 	websocket.onerror = function(event) {
         socketIsOpen = false;
@@ -88,11 +86,13 @@ function onMessage(data) {
         document.getElementById("line1").innerHTML = data['line1'];
     }
     if (data.hasOwnProperty('show')) {
-        document.getElementById('lower-third').classList.toggle('show', data['show']);
+        document.body.classList.toggle('show', data['show']);
     }
+    /*
     if (data['ping']) {
-        sendCommand({pong: command['ping']});
+        sendCommand({"pong": data['ping']});
     }
+    */
 }
 </script>
 </body>

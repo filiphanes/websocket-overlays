@@ -6,52 +6,88 @@
 <script>
 WEBSOCKET_URI = "ws://127.0.0.1:8089/lower-third-simple"
 </script>
-<link rel="stylesheet" href="../css/materialize.min.css">
+<link rel="stylesheet" href="../css/bootstrap.min.css">
 <style>
-.space {
-	margin-bottom: 8px;
-}
-textarea.materialize-textarea {
-    overflow-y: scroll;
-}
-.cc {
-	margin: 3em;
-}
 </style>
+</head>
+<body>
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md">
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">Lower Third control</h5>
+					<div class="form-group">
+						<input class="form-control" type="text" placeholder="Text" id="line1" value="Text Line" onchange="updateLine1()">
+					</div>
+					<div>
+						<button class="btn btn-lg btn-success" onclick='show()'>Show</button>
+						<button class="btn btn-lg btn-primary" onclick='hide()'>Hide</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md">
+			<div class="card">
+				<div class="card-body">
+					<h5 class="card-title">Connection settings</h5>
+					<div class="form-row">
+						<div class="form-group col">
+							<label for="WEBSOCKET_URI">Websocket URI:</label>
+							<div class="input-group">
+								<input id="WEBSOCKET_URI" class="form-control" value="ws://127.0.0.1:8089/" placeholder="ws://127.0.0.1:8089/">
+								<button class="form-control btn btn-success col-3" onclick='doConnect();' id="btt_connect">Connect</button>
+								<button class="form-control btn btn-danger col-3" onclick='doDisconnect();' id="btt_disconnect">Disconnect</button>
+							</div>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group col">
+							<label for="inputtext">Custom command:</label>
+							<div class="input-group">
+								<input id="inputtext" class="form-control" type="text" placeholder="Command">
+								<div class="input-group-append">
+									<button class="form-control btn btn-primary" onclick='sendCommand(JSON.parse(document.getElementById("inputtext").value));'>Send command</button>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group col">
+							<label for="outputtext">Console:</label>
+							<textarea id="outputtext" class="form-control" style="height: 10rem; font-size: 80%; font-family: monospace;" readonly></textarea>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="../js/controller.js"></script>
 <script>
+document.getElementById("WEBSOCKET_URI").value = WEBSOCKET_URI;
+
 function onMessage(data) {
 	console.log(data);
     if (data.hasOwnProperty('line1')) {
         document.getElementById("line1").value = data['line1'];
     }
 }
+
+function updateLine1() {
+	sendCommand({
+		"line1": document.getElementById("line1").value,
+	})
+}
+function show() {
+	sendCommand({
+		"line1": document.getElementById("line1").value,
+		"show": true,
+	})
+}
+function hide() {
+	sendCommand({"show": false})
+}
 </script>
-<script src="../js/controller.js"></script>
-</head>
-<body>
-	<div class="cc">
-		<div class="row">
-			<div class="col s6">
-				<input type="text" placeholder="Line 1" id="line1">
-				<div class="space">
-					<button class="btn" onclick='sendCommand({"line1": getInput("line1"), "show": 1});'>Show</button>
-					<button class="btn" onclick='sendCommand({"show": 0});'>Hide</button>
-				</div>
-			</div>
-			<div class="col s1"></div>
-			<div class="col s5">
-				<div class="row">
-					Console: <textarea id="outputtext" rows="20" cols="50" class="materialize-textarea"></textarea>
-					Command Input: <input id="inputtext" placeholder="Command">
-					<button class="btn" onclick='sendCommand(JSON.parse(getInput("inputtext")));'>Send command</button><br>
-					Websocket URI: <input id="WEBSOCKET_URI" value="ws://127.0.0.1:8089/" placeholder="ws://127.0.0.1:8089/"><br>
-					<button class="btn" onclick='doConnect();' id="btt_connect">Connect</button>
-					<button class="btn" onclick='doDisconnect();' id="btt_disconnect">Disconnect</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	<script>document.getElementById("WEBSOCKET_URI").innerHTML = WEBSOCKET_URI;</script>
-	<script src="../js/materialize.min.js"></script>
 </body>
 </html>
