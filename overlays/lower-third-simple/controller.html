@@ -8,6 +8,9 @@ WEBSOCKET_URI = "ws://127.0.0.1:8089/lower-third-simple"
 </script>
 <link rel="stylesheet" href="../css/bootstrap.min.css">
 <style>
+.control-button {
+	max-width: 6rem;
+}
 </style>
 </head>
 <body>
@@ -17,12 +20,10 @@ WEBSOCKET_URI = "ws://127.0.0.1:8089/lower-third-simple"
 			<div class="card">
 				<div class="card-body">
 					<h5 class="card-title">Lower Third control</h5>
-					<div class="form-group">
+					<div class="input-group">
 						<input class="form-control" type="text" placeholder="Text" id="line1" value="Text Line" onchange="updateLine1()">
-					</div>
-					<div>
-						<button class="btn btn-lg btn-success" onclick='show()'>Show</button>
-						<button class="btn btn-lg btn-primary" onclick='hide()'>Hide</button>
+						<button class="form-control btn btn-success control-button" onclick='show()'>Show</button>
+						<button class="form-control btn btn-primary control-button" onclick='hide()'>Hide</button>
 					</div>
 				</div>
 			</div>
@@ -36,8 +37,8 @@ WEBSOCKET_URI = "ws://127.0.0.1:8089/lower-third-simple"
 							<label for="WEBSOCKET_URI">Websocket URI:</label>
 							<div class="input-group">
 								<input id="WEBSOCKET_URI" class="form-control" value="ws://127.0.0.1:8089/" placeholder="ws://127.0.0.1:8089/">
-								<button class="form-control btn btn-success col-3" onclick='doConnect();' id="btt_connect">Connect</button>
-								<button class="form-control btn btn-danger col-3" onclick='doDisconnect();' id="btt_disconnect">Disconnect</button>
+								<button class="form-control btn btn-success control-button" onclick='doConnect();' id="btt_connect">Connect</button>
+								<button class="form-control btn btn-danger control-button" onclick='doDisconnect();' id="btt_disconnect">Disconnect</button>
 							</div>
 						</div>
 					</div>
@@ -67,6 +68,7 @@ WEBSOCKET_URI = "ws://127.0.0.1:8089/lower-third-simple"
 <script>
 document.getElementById("WEBSOCKET_URI").value = WEBSOCKET_URI;
 
+var history = [];
 function onMessage(data) {
 	console.log(data);
     if (data.hasOwnProperty('line1')) {
@@ -75,8 +77,12 @@ function onMessage(data) {
 }
 
 function updateLine1() {
+	var line = document.getElementById("line1").value;
+	if (history.indexOf(line) < 0) {
+		history.push(line);
+	}
 	sendCommand({
-		"line1": document.getElementById("line1").value,
+		"line1": line,
 	})
 }
 function show() {
