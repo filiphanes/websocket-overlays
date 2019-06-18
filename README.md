@@ -13,6 +13,11 @@ Python 3.6+ is needed. You can download it from https://www.python.org/downloads
     pip3 install websockets
     python3 server.py 127.0.0.1 8089
 
+NodeJS is needed. You can download it from https://nodejs.org/en/
+
+    npm install ws
+    node server.js 127.0.0.1 8089
+
 # Setup in playout software
 Setting you might need to change is websocket URI in `overlay.html` and `controller.html` in `overlays/your-overlay/` directory.
 Set it to the same IP address and port as your server is running on.
@@ -43,7 +48,5 @@ This project was inspired by
 
 # TODO
 - more overlays
-- bootstrap js and css
 - remember controller config in browser session storage
 - public websocket server with public overlays
-- server implementation in nodejs
