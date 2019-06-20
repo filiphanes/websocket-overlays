@@ -1,0 +1,12 @@
+{
+  "version": 3,
+  "file": "bundle.css",
+  "sources": [
+    "../src/Controller.svelte"
+  ],
+  "sourcesContent": [
+    "<style>\n.control-button {\n\tmax-width: 6rem;\n}\n</style>\n<script>\n\tlet lines = [1,2,3,4];\n\tlet shown = -1;\n\n\tfunction showLine(i) {\n\t\tif (shown === i) {\n\t\t\tshown = -1;\n\t\t} else {\n\t\t\tshown = i;\n\t\t}\n\t}\n\tfunction cleanLines() {\n\t\t// remove empty lines except last\n\t\tlines = [...lines.filter(l=>l), ''];\n\t}\n\tcleanLines();\n</script>\n\n<div class=\"container-fluid\">\n\t<div class=\"row\">\n\t\t<div class=\"col-md\">\n\t\t\t<div class=\"card\">\n\t\t\t\t<div class=\"card-body\">\n\t\t\t\t\t<h5 class=\"card-title\">Lower Third control</h5>\n\t\t\t\t\t{#each lines as line, i}\n\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t<input class=\"form-control\" type=\"text\" placeholder=\"Text\" id=\"line1\" bind:value=\"{line}\" on:change={cleanLines}>\n\t\t\t\t\t\t<button class=\"form-control btn {shown === i?'btn-danger':'btn-primary'} control-button\" on:click={e=>showLine(i)}>{#if shown === i}Hide{:else}Show{/if}</button>\n\t\t\t\t\t</div>\n\t\t\t\t\t{/each}\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n</div>\n"
+  ],
+  "names": [],
+  "mappings": "AACA,eAAe,eAAC,CAAC,AAChB,SAAS,CAAE,IAAI,AAChB,CAAC"
+}
