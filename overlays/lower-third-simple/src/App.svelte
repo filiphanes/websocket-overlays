@@ -4,47 +4,63 @@
 }
 </style>
 <script>
+import { onMount, onDestroy } from 'svelte';
+import { doConnect, doDisconnect, sendCommand } from './websocket-client.js';
+
 let lines = [1,2,3,4];
 let shown = -1;
 
-function showLine(i) {
+onMount(async () => {
+	doConnect(onMessage);
+})
+
+onDestroy(async () => {
+	doDisconnect();
+})
+
+function toggleLine(i) {
 	if (shown === i) {
 		shown = -1;
 	} else {
 		shown = i;
 	}
+	sendCommand({
+		"shown": shown,
+		"line1": lines[i],
+		"show": shown >= 0,
+	})
 }
 function cleanLines() {
 	// remove empty lines except last
 	lines = [...lines.filter(l=>l), ''];
+
 }
 function onMessage(data) {
 	console.log(data);
     if (data.hasOwnProperty('lines')) {
-        lines = data.lines;
+		lines = data.lines;
+		cleanLines();
     }
     if (data.hasOwnProperty('shown')) {
         shown = data.shown;
     }
 }
 
-function updateLine(i) {
-	var line = document.getElementById("line1").value;
-	if (history.indexOf(line) < 0) {
-		history.push(line);
+function updateLines() {
+	sendCommand({
+		"lines": lines,
+	})
+}
+
+function changeLine(i) {
+	let command = {
+		"lines": lines,
+	};
+	if (shown === i) {
+		command["line1"] = lines[i];
 	}
-	sendCommand({
-		"line1": line,
-	})
-}
-function show() {
-	sendCommand({
-		"line1": document.getElementById("line1").value,
-		"show": true,
-	})
-}
-function hide() {
-	sendCommand({"show": false})
+	sendCommand(command);
+	cleanLines();
 }
 
 cleanLines();
@@ -58,8 +74,13 @@ cleanLines();
 					<h5 class="card-title">Lower Third control</h5>
 					{#each lines as line, i}
 					<div class="input-group">
-						<input class="form-control" type="text" placeholder="Text" id="line1" bind:value="{line}" on:change={cleanLines}>
-						<button class="form-control btn {shown === i?'btn-danger':'btn-primary'} control-button" on:click={e=>showLine(i)}>{#if shown === i}Hide{:else}Show{/if}</button>
+						<input class="form-control" type="text" placeholder="Text"
+								bind:value="{line}"
+								on:change={e=>changeLine(i)}>
+						<button class="form-control btn {shown === i?'btn-danger':'btn-primary'} control-button"
+								on:click={e=>toggleLine(i)}>
+							{#if shown === i}Hide{:else}Show{/if}
+						</button>
 					</div>
 					{/each}
 				</div>
