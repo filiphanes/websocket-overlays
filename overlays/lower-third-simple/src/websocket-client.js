@@ -11,7 +11,7 @@ export function sendCommand(obj) {
 	if (socketIsOpen) {
 		websocket.send(JSON.stringify(obj));
 	} else {
-		console.err('Not connected\n');
+		console.error('Not connected\n');
 	}
 }
 
