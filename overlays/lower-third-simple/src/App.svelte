@@ -66,25 +66,16 @@ function changeLine(i) {
 cleanLines();
 </script>
 
-<div class="container-fluid">
-	<div class="row">
-		<div class="col-md">
-			<div class="card">
-				<div class="card-body">
-					<h5 class="card-title">Lower Third control</h5>
-					{#each lines as line, i}
-					<div class="input-group">
-						<input class="form-control" type="text" placeholder="Text"
-								bind:value="{line}"
-								on:change={e=>changeLine(i)}>
-						<button class="form-control btn {shown === i?'btn-danger':'btn-primary'} control-button"
-								on:click={e=>toggleLine(i)}>
-							{#if shown === i}Hide{:else}Show{/if}
-						</button>
-					</div>
-					{/each}
-				</div>
-			</div>
-		</div>
+<div class="">
+	{#each lines as line, i}
+	<div class="input-group">
+		<input class="form-control" type="text" placeholder="Text"
+				bind:value="{line}"
+				on:change={e=>changeLine(i)}>
+		<button class="form-control btn {shown === i?'btn-danger':'btn-primary'} control-button"
+				on:click={e=>toggleLine(i)}>
+			{#if shown === i}Hide{:else}Show{/if}
+		</button>
 	</div>
+	{/each}
 </div>
