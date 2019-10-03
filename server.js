@@ -32,7 +32,9 @@ server.on('connection', function connection(ws, req) {
     const port = req.connection.remotePort;
     const pathname = url.parse(req.url).pathname;
     console.log(ip, port, pathname, 'connected');
-    STATE[pathname] = {};
+    if (!STATE[pathname]) {
+        STATE[pathname] = {};
+    }
     ws.send(JSON.stringify(STATE[pathname]));
 
     ws.on('message', function incoming(message) {
