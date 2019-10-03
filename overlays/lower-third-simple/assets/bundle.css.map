@@ -1,0 +1,12 @@
+{
+  "version": 3,
+  "file": "bundle.css",
+  "sources": [
+    "../src/App.svelte"
+  ],
+  "sourcesContent": [
+    "<style>\n.control-button {\n\tmax-width: 6rem;\n}\n</style>\n<script>\nimport { onMount, onDestroy } from 'svelte';\nimport { doConnect, doDisconnect, sendCommand } from './websocket-client.js';\n\nlet lines = [1,2,3,4];\nlet shown = -1;\n\nonMount(async () => {\n\tdoConnect(onMessage);\n})\n\nonDestroy(async () => {\n\tdoDisconnect();\n})\n\nfunction toggleLine(i) {\n\tif (shown === i) {\n\t\tshown = -1;\n\t} else {\n\t\tshown = i;\n\t}\n\tsendCommand({\n\t\t\"shown\": shown,\n\t\t\"line1\": lines[i],\n\t\t\"show\": shown >= 0,\n\t})\n}\nfunction cleanLines() {\n\t// remove empty lines except last\n\tlines = [...lines.filter(l=>l), ''];\n\n}\nfunction onMessage(data) {\n\tconsole.log(data);\n    if (data.hasOwnProperty('lines')) {\n\t\tlines = data.lines;\n\t\tcleanLines();\n    }\n    if (data.hasOwnProperty('shown')) {\n        shown = data.shown;\n    }\n}\n\nfunction updateLines() {\n\tsendCommand({\n\t\t\"lines\": lines,\n\t})\n}\n\nfunction changeLine(i) {\n\tlet command = {\n\t\t\"lines\": lines,\n\t};\n\tif (shown === i) {\n\t\tcommand[\"line1\"] = lines[i];\n\t}\n\tsendCommand(command);\n\tcleanLines();\n}\n\ncleanLines();\n</script>\n\n<div class=\"container-fluid\">\n\t<div class=\"row\">\n\t\t<div class=\"col-md\">\n\t\t\t<div class=\"card\">\n\t\t\t\t<div class=\"card-body\">\n\t\t\t\t\t<h5 class=\"card-title\">Lower Third control</h5>\n\t\t\t\t\t{#each lines as line, i}\n\t\t\t\t\t<div class=\"input-group\">\n\t\t\t\t\t\t<input class=\"form-control\" type=\"text\" placeholder=\"Text\"\n\t\t\t\t\t\t\t\tbind:value=\"{line}\"\n\t\t\t\t\t\t\t\ton:change={e=>changeLine(i)}>\n\t\t\t\t\t\t<button class=\"form-control btn {shown === i?'btn-danger':'btn-primary'} control-button\"\n\t\t\t\t\t\t\t\ton:click={e=>toggleLine(i)}>\n\t\t\t\t\t\t\t{#if shown === i}Hide{:else}Show{/if}\n\t\t\t\t\t\t</button>\n\t\t\t\t\t</div>\n\t\t\t\t\t{/each}\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t</div>\n\t</div>\n</div>\n"
+  ],
+  "names": [],
+  "mappings": "AACA,eAAe,eAAC,CAAC,AAChB,SAAS,CAAE,IAAI,AAChB,CAAC"
+}
