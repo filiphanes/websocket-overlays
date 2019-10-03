@@ -1,4 +1,5 @@
 const WebSocket = require('ws');
+const url = require('url');
 
 const server = new WebSocket.Server({
     // host: process.argv[1] || '0.0.0.0',
@@ -28,13 +29,16 @@ let STATE = {};
 
 server.on('connection', function connection(ws, req) {
     const ip = req.connection.remoteAddress;
-    console.log(ip, 'connected');
-    ws.send(JSON.stringify(STATE));
+    const port = req.connection.remotePort;
+    const pathname = url.parse(req.url).pathname;
+    console.log(ip, port, pathname, 'connected');
+    STATE[pathname] = {};
+    ws.send(JSON.stringify(STATE[pathname]));
 
     ws.on('message', function incoming(message) {
-        console.log(message)
+        console.log(ip, port, message)
         const data = JSON.parse(message);
-        Object.assign(STATE, data);
+        Object.assign(STATE[pathname], data);
         // Broadcast to everyone else.
         server.clients.forEach(function each(client) {
             if (client !== ws && client.readyState === WebSocket.OPEN) {
