@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lower Third</title>
+<script>
+WEBSOCKET_URI = "ws://127.0.0.1:8089/bible"
+</script>
+<style>
+@import url('https://fonts.googleapis.com/css?family=PT+Sans');
+
+html {
+	width: 1280px;
+	height: 720px;
+    overflow: hidden;
+}
+body {
+	width: 1280px;
+	height: 720px;
+	margin: 0;
+	overflow: hidden;
+	font-family: 'PT Sans';
+	background: transparent;
+}
+#lower-third {
+	position: absolute;
+    opacity: 0;
+    transition: all 1s ease-in;
+}
+.show #lower-third {
+    opacity: 1;
+}
+
+#line1 {
+    position: absolute;
+    top: 550px;
+    left: 40px;
+    font-size: 5em;
+    padding: 0 2rem;
+    color: white;
+    text-shadow: 5px 5px 5px black;
+    white-space: nowrap;
+}
+</style>
+</head>
+<body>
+	<div class="sitebox">
+		<div id="lower-third">
+            <span id="line1">Main header line</span>
+		</div>
+	</div>
+<script>
+var socketIsOpen = false;
+var intervalID = 0;
+connectWebsocket = function() {
+    // Modify this URL to point to the IP address and port where your server is running on
+	websocket = new WebSocket(WEBSOCKET_URI);
+	websocket.onopen = function(event) {
+        socketIsOpen = true;
+        clearInterval(intervalID);
+        intervalID = 0;
+    };
+	websocket.onclose = function(event) {
+        socketIsOpen = false;
+        if (!intervalID) {
+            intervalID = setInterval(connectWebsocket, 5000);
+        }
+    };
+	websocket.onmessage = function(event) {
+        console.log(event.data);
+        var messageObject = JSON.parse(event.data);
+        onMessage(messageObject);
+    };
+	websocket.onerror = function(event) {
+        socketIsOpen = false;
+        if (!intervalID) {
+            intervalID = setInterval(connectWebsocket, 5000);
+        }
+    };
+};
+
+window.addEventListener("load", connectWebsocket, false);
+
+function onMessage(data) {
+    if (data.hasOwnProperty('line1')) {
+        document.getElementById("line1").innerHTML = data['line1'];
+    }
+    if (data.hasOwnProperty('show')) {
+        document.body.classList.toggle('show', data['show']);
+    }
+    /*
+    if (data['ping']) {
+        sendCommand({"pong": data['ping']});
+    }
+    */
+}
+</script>
+</body>
+</html>
