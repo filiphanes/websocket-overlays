@@ -12,7 +12,7 @@
   let booksByAbbr = new Map();
   books.forEach(book => {booksByAbbr[book.abbreviation] = book});
 
-  let bookFilter = "e";
+  let bookFilter = "";
   let selectedBook = "gn";
   let book;
 
@@ -26,6 +26,7 @@
         return (
           bookLower.startsWith(prefix) ||
           book.abbreviation.startsWith(prefix) ||
+          (book.aliases && book.aliases.some(a => a.toLowerCase().startsWith(prefix))) ||
           (prefix.length >= 2 && bookLower.includes(' '+prefix))
         );
       })
@@ -61,7 +62,8 @@
 
 <style>
   .control-button {
-    max-width: 6rem;
+    width: 6rem;
+    float: right;
   }
   .books-filter {
     width: 100%;
@@ -75,8 +77,8 @@
   .address {
     color: white;
   }
-  :global(note) {
-    display: none;
+  :global(body) {
+    color: white;
   }
 </style>
 
@@ -91,15 +93,16 @@
   {/each}
 </select>
 
-<!-- <div class="chapter">Kapitola: {selectedChapter}</div> -->
+Kapitola: {selectedChapter}
 <Keypad bind:value={selectedChapter} />
-<!-- <div class="verse">Verš: {selectedVerse}</div> -->
+Verš: {selectedVerse}
 <Keypad bind:value={selectedVerse} />
 
-<button on:click={toggleLine} class="control-button" class:active={!shown}>
-  Zobraziť
+<button class="control-button btn" on:click={toggleLine} class:btn-danger={shown} class:btn-primary={!shown}>
+  {#if shown}Skryť{:else}Zobraziť{/if}
 </button>
 <div class="address">{line1}</div>
 <span class="vers">
   {@html line2}
 </span>
+
