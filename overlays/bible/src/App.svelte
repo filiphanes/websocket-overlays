@@ -8,7 +8,7 @@
   let line1 = '';
   let line2 = '';
 
-  let books = seb.books;
+  let books = seb.books.filter(book => book.category != 'deut');
   let booksByAbbr = new Map();
   books.forEach(book => {booksByAbbr[book.abbreviation] = book});
 
@@ -34,7 +34,7 @@
 
   $: book = booksByAbbr[selectedBook];
   $: line1 = book.name + ' ' + selectedChapter + (selectedVerse ? ','+selectedVerse : '');
-  $: line2 = book.chapters[selectedChapter] ? book.chapters[selectedChapter][selectedVerse] : '';
+  $: line2 = book.chapters[selectedChapter] ? book.chapters[selectedChapter][selectedVerse] || '' : '';
 
   onMount(async () => {
     doConnect(onMessage);
@@ -48,6 +48,10 @@
     shown = !shown;
     sendCommand({
       line1: line1,
+      line2: line2,
+      book: selectedBook,
+      chapter: selectedChapter,
+      verse: selectedVerse,
       show: shown
     });
   }
@@ -57,6 +61,21 @@
     if (data.hasOwnProperty("shown")) {
       shown = data.shown;
     }
+    if (data.hasOwnProperty("book")) {
+      selectBook = data.book;
+    }
+    if (data.hasOwnProperty("chapter")) {
+      selectedChapter = data.chapter;
+    }
+    if (data.hasOwnProperty("verse")) {
+      selectedVerse = data.vers;
+    }
+  }
+
+  function selectBook(book) {
+    selectedBook = book.abbreviation;
+    selectedChapter = '';
+    selectedVerse = '';
   }
 </script>
 
@@ -66,12 +85,17 @@
     float: right;
   }
   .books-filter {
-    width: 100%;
+    display: block;
+    width: 50%;
     padding: 0;
+    height: 10rem;
+    overflow: scroll;
   }
-  .books-filter option {
+  .books-filter button {
     width: 100%;
+    margin: 0;
     padding: 0.5rem;
+    text-align: left;
   }
   .vers,
   .address {
@@ -87,11 +111,11 @@
   type="text"
   placeholder="filter"
   bind:value={bookFilter} />
-<select class="books-filter" bind:value={selectedBook} size={8}>
+<div class="books-filter">
   {#each filteredBooks as book}
-    <option value={book.abbreviation}>{book.name}</option>
+  <button class="btn btn-primary" class:btn-success={book.abbreviation==selectedBook} on:click={selectBook(book)}>{book.name}</button>
   {/each}
-</select>
+</div>
 
 Kapitola: {selectedChapter}
 <Keypad bind:value={selectedChapter} />
