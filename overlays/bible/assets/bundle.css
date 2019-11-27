@@ -1,4 +1,4 @@
-.control-button.svelte-1wc7nzb{width:6rem;float:right}.books-filter.svelte-1wc7nzb{display:block;width:50%;padding:0;height:10rem;overflow:scroll}.books-filter.svelte-1wc7nzb button.svelte-1wc7nzb{width:100%;margin:0;padding:0.5rem;text-align:left}.vers.svelte-1wc7nzb,.address.svelte-1wc7nzb{color:white}body{color:white}
+.control-button.svelte-2g9pxo{width:6rem;float:right}.books-filter.svelte-2g9pxo{display:block;width:49%;margin:0 1% 0 0;padding:0;height:10rem;overflow:scroll;float:left}.books-filter.svelte-2g9pxo button.svelte-2g9pxo{width:100%;margin:0 0 .25rem 0;padding:.25rem .5rem;text-align:left}.vers.svelte-2g9pxo,.address.svelte-2g9pxo{color:white}body{color:white}
 .keypad.svelte-7yggqt{display:grid;grid-template-columns:repeat(7, 3rem);grid-template-rows:repeat(2, 3rem);grid-gap:0.2rem;margin:0 0 0.5rem 0}button.svelte-7yggqt{margin:0;line-height:2rem;width:3rem}
 
 /*# sourceMappingURL=bundle.css.map */
