@@ -46,7 +46,7 @@
 
   $: aBook = booksByAbbr[selected.book];
   $: line1 = addressAsString(selected);
-  $: line2 = aBook.chapters[selected.chapter] ? aBook.chapters[selected.chapter][selected.verse] || '' : '';
+  $: line2 = aBook.chapters[selected.chapter] ? aBook.chapters[selected.chapter][selected.verse-1] || '' : '';
 
   onMount(async () => {
     doConnect(onMessage);
@@ -85,25 +85,43 @@
       selected.verse = address.verse || '';
     }
   }
+  function removeLastAddress(j) {
+    return () => {
+    lastAddresses = lastAddresses.filter((h, i) => (i !== j));
+    }
+  }
 
-  function toggleLine() {
-    shown = !shown;
+  function updateLine() {
     sendCommand({
-      show: shown,
       line1: line1,
       line2: line2,
       address: selected,
     });
-    addToLastAddresses(selected)
+  }
+  function toggleLine() {
+    shown = !shown;
+    const data = {
+      show: shown
+    };
+    if (shown) {
+      addToLastAddresses(selected);
+      data.line1 = line1;
+      data.line2 = line2;
+      data.history = lastAddresses;
+    }
+    sendCommand(data);
   }
 
   function onMessage(data) {
     console.log(data);
-    if (data.hasOwnProperty("shown")) {
-      shown = data.shown;
+    if (data.hasOwnProperty("show")) {
+      shown = data.show;
     }
     if (data.hasOwnProperty("address")) {
       selected = data.address;
+    }
+    if (data.hasOwnProperty("history")) {
+      lastAddresses = data.history;
     }
   }
 
@@ -114,7 +132,8 @@
     width: 6rem;
     float: right;
   }
-  .books-filter {
+  .books-filter,
+  .address-filter {
     display: block;
     width: 49%;
     margin: 0 1% 0 0;
@@ -123,11 +142,26 @@
     overflow: scroll;
     float: left;
   }
-  .books-filter button {
+  .book-item {
     width: 100%;
     margin: 0 0 .25rem 0;
     padding: .25rem .5rem;
     text-align: left;
+  }
+  .address-item {
+    width: 100%;
+    margin: 0 0 .25rem 0;
+  }
+  .address-set {
+    width: auto;
+    padding: .25rem .5rem;
+    margin: 0;
+    text-align: left;
+  }
+  .address-remove {
+    margin: 0;
+    max-width: 2rem;
+    padding: .25rem .5rem;
   }
   .vers,
   .address {
@@ -138,30 +172,37 @@
   }
 </style>
 
-<input
-  class="form-control"
-  type="text"
-  placeholder="filter"
-  bind:value={bookFilter} />
+<div class="input-group" style="width: 100%; display: flex;">
+  <input class="form-control" type="text" placeholder="filter" bind:value={bookFilter} />
+  <button type="button" class="form-control btn btn-secondary" on:click={()=>{bookFilter=''}} style="max-width: 2rem;">&times;</button>
+</div>
 <div class="books-filter">
   {#each filteredBooks as book}
-  <button class="btn btn-primary" class:btn-success={book.abbreviation==selected.book} on:click={selectAddress({book: book.abbreviation})}>{book.name}</button>
+  <button class="book-item btn" class:btn-primary={book.abbreviation==selected.book} on:click={selectAddress({book: book.abbreviation})}>{book.name}</button>
   {/each}
 </div>
-<div class="books-filter">
-  {#each filteredLastAddresses as address}
-  <button class="btn btn-primary" class:btn-success={equalAddresses(address, selected)} on:click={selectAddress(address)}>{addressAsString(address)}</button>
+<div class="address-filter">
+  {#each filteredLastAddresses as address, i}
+  <div class="address-item btn-group">
+    <button class="address-set btn" class:btn-primary={equalAddresses(address, selected)} on:click={selectAddress(address)}>{addressAsString(address)}</button>
+    <button class="btn btn-secondary address-remove" on:click={removeLastAddress(i)}>&times;</button>
+  </div>
   {/each}
 </div>
 
-Kapitola: {selected.chapter}
-<Keypad bind:value={selected.chapter} />
-Verš: {selected.verse}
-<Keypad bind:value={selected.verse} />
+<div style="display: inline-block; margin: 0 .5rem 0 0;">
+  Kapitola: {selected.chapter}
+  <Keypad bind:value={selected.chapter} max={Object.keys(aBook.chapters).length} />
+</div>
+<div style="display: inline-block;">
+  Verš: {selected.verse}
+  <Keypad bind:value={selected.verse} max={(aBook.chapters[selected.chapter]||[]).length} />
+</div>
 
-<button class="control-button btn" on:click={toggleLine} class:btn-danger={shown} class:btn-primary={!shown}>
+<button class="control-button btn" on:click={toggleLine} class:btn-danger={shown} class:btn-success={!shown}>
   {#if shown}Skryť{:else}Zobraziť{/if}
 </button>
+<button class="control-button btn btn-primary" on:click={updateLine}>Zmeniť</button>
 <div class="address">{line1}</div>
 <span class="vers">{@html line2}</span>
 

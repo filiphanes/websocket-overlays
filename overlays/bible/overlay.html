@@ -24,6 +24,8 @@ body {
 }
 #lower-third {
 	position: absolute;
+    bottom: 50px;
+    left: 40px;
     opacity: 0;
     transition: all 1s ease-in;
 }
@@ -32,23 +34,26 @@ body {
 }
 
 #line1 {
-    position: absolute;
-    top: 550px;
-    left: 40px;
     font-size: 5em;
     padding: 0 2rem;
     color: white;
     text-shadow: 5px 5px 5px black;
     white-space: nowrap;
 }
+#line2 {
+    font-size: 4em;
+    padding: 0 2rem;
+    color: white;
+    line-height: 1;
+    text-shadow: 4px 4px 5px black;
+}
 </style>
 </head>
 <body>
-	<div class="sitebox">
-		<div id="lower-third">
-            <span id="line1">Main header line</span>
-		</div>
-	</div>
+    <div id="lower-third">
+        <div id="line1">Main header line</div>
+        <div id="line2"></div>
+    </div>
 <script>
 var socketIsOpen = false;
 var intervalID = 0;
@@ -83,7 +88,10 @@ window.addEventListener("load", connectWebsocket, false);
 
 function onMessage(data) {
     if (data.hasOwnProperty('line1')) {
-        document.getElementById("line1").innerHTML = data['line1'];
+        document.getElementById("line1").innerHTML = data.line1;
+    }
+    if (data.hasOwnProperty('line2')) {
+        document.getElementById("line2").innerHTML = data.line2;
     }
     if (data.hasOwnProperty('show')) {
         document.body.classList.toggle('show', data['show']);
