@@ -13,6 +13,7 @@
     {book: "jn", chapter: 3, verse: 16},
   ];
 
+  // Filter out deuteronomy books
   let books = seb.books.filter(book => book.category != 'deut');
   let booksByAbbr = new Map();
   books.forEach(book => {booksByAbbr[book.abbreviation] = book});
@@ -57,20 +58,17 @@
   });
 
   function addToLastAddresses(address) {
-    console.log('before', lastAddresses)
     lastAddresses.unshift({
       book: address.book,
       chapter: address.chapter,
       verse: address.verse,
     })
-    console.log('between', lastAddresses)
     lastAddresses = lastAddresses.filter((h,i) =>
       i === 0 ||
       h.book != address.book ||
       h.chapter != address.chapter ||
       h.verse != address.verse
     )
-    console.log('after', lastAddresses)
   }
   const addressAsString = (address) => (booksByAbbr[address.book].name + ' ' + address.chapter + (address.verse ? ','+address.verse : ''));
   const equalAddresses = (a1, a2) => (
@@ -113,7 +111,7 @@
   }
 
   function onMessage(data) {
-    console.log(data);
+    console.log('Recieved websocket message', data);
     if (data.hasOwnProperty("show")) {
       shown = data.show;
     }
@@ -130,7 +128,7 @@
 <style>
   .control-button {
     width: 6rem;
-    float: right;
+    /* float: right; */
   }
   .books-filter,
   .address-filter {
@@ -174,7 +172,7 @@
 
 <div class="input-group" style="width: 100%; display: flex;">
   <input class="form-control" type="text" placeholder="filter" bind:value={bookFilter} />
-  <button type="button" class="form-control btn btn-secondary" on:click={()=>{bookFilter=''}} style="max-width: 2rem;">&times;</button>
+  <button type="button" class="form-control btn btn-secondary" on:click={()=>{bookFilter=''}} style="max-width: 2rem;">×</button>
 </div>
 <div class="books-filter">
   {#each filteredBooks as book}
@@ -185,14 +183,14 @@
   {#each filteredLastAddresses as address, i}
   <div class="address-item btn-group">
     <button class="address-set btn" class:btn-primary={equalAddresses(address, selected)} on:click={selectAddress(address)}>{addressAsString(address)}</button>
-    <button class="btn btn-secondary address-remove" on:click={removeLastAddress(i)}>&times;</button>
+    <button class="btn address-remove" on:click={removeLastAddress(i)}>×</button>
   </div>
   {/each}
 </div>
 
 <div style="display: inline-block; margin: 0 .5rem 0 0;">
   Kapitola: {selected.chapter}
-  <Keypad bind:value={selected.chapter} max={Object.keys(aBook.chapters).length} />
+ss  <Keypad bind:value={selected.chapter} max={Object.keys(aBook.chapters).length} />
 </div>
 <div style="display: inline-block;">
   Verš: {selected.verse}

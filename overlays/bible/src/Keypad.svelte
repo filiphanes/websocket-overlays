@@ -9,8 +9,8 @@
   const select = num => () => {value = Math.min(+value * 10 + num, max||99999999)};
   const decrement = () => {value = Math.max(1, +value - 1)};
   const increment = () => {value = Math.min(+value + 1, max||99999999)};
-  const clear = () => {value = "";};
-  const deleteLast = () => {value = Math.floor(+value / 10);};
+  const clear = () => {value = ""};
+  const backspace = () => {value = Math.floor(+value / 10) || ''};
 </script>
 
 <style>
@@ -42,7 +42,7 @@
   <button class="btn btn-primary" on:click={select(8)}>8</button>
   <button class="btn btn-primary" on:click={select(9)}>9</button>
 
-  <button class="btn btn-primary" on:click={deleteLast} disabled={!value}>←</button>
+  <button class="btn btn-primary" on:click={backspace} disabled={!value}>←</button>
   <button class="btn btn-primary" on:click={select(0)}>0</button>
   <button class="btn btn-primary" on:click={clear} disabled={!value} >C</button>
 
