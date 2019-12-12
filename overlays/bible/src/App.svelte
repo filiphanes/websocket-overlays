@@ -190,7 +190,7 @@
 
 <div style="display: inline-block; margin: 0 .5rem 0 0;">
   Kapitola: {selected.chapter}
-ss  <Keypad bind:value={selected.chapter} max={Object.keys(aBook.chapters).length} />
+  <Keypad bind:value={selected.chapter} max={Object.keys(aBook.chapters).length} />
 </div>
 <div style="display: inline-block;">
   Verš: {selected.verse}
