@@ -16,8 +16,8 @@
 <style>
   .keypad {
     display: grid;
-    grid-template-columns: repeat(3, 3rem);
-    grid-template-rows: repeat(5, 3rem);
+    grid-template-columns: repeat(3, 2.8rem);
+    grid-template-rows: repeat(5, 2.8rem);
     grid-gap: 0.2rem;
     margin: 0 0 0.5rem 0;
   }
@@ -25,7 +25,7 @@
   button {
     margin: 0;
     line-height: 2rem;
-    width: 3rem;
+    width: 2.8rem;
   }
 </style>
 
