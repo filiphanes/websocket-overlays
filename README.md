@@ -29,14 +29,14 @@ Node server:
     node server.js 127.0.0.1 8089
 
 ## 2. Open controller
-Open in browser `overlays/lower-third-simple/controller.html`.
+Open in browser `lower-third-simple/controller.html`.
 
 ## 3. Open overlay
-Open in browser `overlays/lower-third-simple/overlay.html`
+Open in browser `lower-third-simple/overlay.html`
 
 # Setup in playout software
-Setting you might need to change is websocket URI in `overlay.html` and `controller.html` in directory `overlays/your-overlay/`.
-Set it to the same IP address and port as your server is running on.
+Setting you might need to change is websocket URI in `overlay.html` and `controller.html` in directory `your-overlay/`.
+FSet it to the same IP address and port as your server is running on.
 
     WEBSOCKET_URI = "ws://127.0.0.1:8089/"
 
@@ -51,6 +51,9 @@ Set it to the same IP address and port as your server is running on.
 
 ## Caspar CG
 https://github.com/CasparCG/help/wiki/Media:-HTML-Templates
+
+## ProPresenter
+https://learn.renewedvision.com/propresenter6/the-features-of-propresenter/web-view
 
 ## XSplit
 https://www.xsplit.com/broadcaster/manual/sources/webpage
