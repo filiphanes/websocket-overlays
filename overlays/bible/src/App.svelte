@@ -2,7 +2,7 @@
   import { onMount, onDestroy } from "svelte";
   import { doConnect, doDisconnect, sendCommand } from "./websocket-client.js";
   import Keypad from "./Keypad.svelte";
-  import seb from "./seb.json";
+  import biblia from "./roh.json";
 
   let shown = false;
   let line1 = '';
@@ -14,7 +14,7 @@
   ];
 
   // Filter out deuteronomy books
-  let books = seb.books.filter(book => book.category != 'deut');
+  let books = biblia.books.filter(book => book.category != 'deut');
   let booksByAbbr = new Map();
   books.forEach(book => {booksByAbbr[book.abbreviation] = book});
 
@@ -35,8 +35,8 @@
     : lastAddresses;
 
   const matchesBook = (book) => {
-    const prefix = bookFilter.toLowerCase();
-    const bookLower = book.name.toLowerCase();
+    const prefix = bookFilter.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    const bookLower = book.name.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase();
     return (
       bookLower.startsWith(prefix) ||
       book.abbreviation.startsWith(prefix) ||
