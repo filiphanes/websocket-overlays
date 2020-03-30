@@ -1,6 +1,8 @@
 # Websocket Overlay
 Simple and powerfull remote controlled html pages useful for overlays in OBS Studio, Casper CD, XSplit or simply fullscreen browser.
 
+Check out overlays project using [gundb](https://gun.eco/): https://github.com/filiphanes/gun-overlays
+
 ## Features
 - server holds overlay state, not only relay commands
 - on refresh or reconnect, state is updated from server for overlay and controller so you don't loose texts etc.
