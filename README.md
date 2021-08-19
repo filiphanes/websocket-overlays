@@ -58,7 +58,7 @@ https://github.com/CasparCG/help/wiki/Media:-HTML-Templates
 https://learn.renewedvision.com/propresenter6/the-features-of-propresenter/web-view
 
 ## XSplit
-https://www.xsplit.com/broadcaster/manual/sources/webpage
+https://help.xsplit.com/en/articles/5142996-webpage
 
 
 # New overlays
