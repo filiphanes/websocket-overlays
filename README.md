@@ -1,4 +1,6 @@
 # Websocket Overlay
+My other project `web-overlays` implements websocket, mqtt and gun protocols for syncing data.
+
 Simple and powerfull remote controlled html pages useful for overlays in OBS Studio, Casper CD, XSplit or simply fullscreen browser.
 
 Check out overlays project using [gundb](https://gun.eco/): https://github.com/filiphanes/gun-overlays
